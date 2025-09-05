@@ -21,18 +21,24 @@ def canUnlockAll(boxes):
     The first box (boxes[0]) is always unlocked initially.
     Each key corresponds to a box number that can be opened.
     """
-    if not boxes or len(boxes) == 0:
+    if not boxes:
         return True
 
     n = len(boxes)
+    if n == 1:
+        return True
+    
     opened = set([0])
-    keys = list(boxes[0])
+    keys_to_check = set(boxes[0])
 
-    while keys:
-        key = keys.pop(0)
+    while keys_to_check:
+        key = keys_to_check.pop()
 
-        if key < n and key not in opened:
+        if 0 <= key < n and key not in opened:
             opened.add(key)
-            keys.extend(boxes[key])
+
+            for new_key in boxes[key]:
+                if new_key not in opened:
+                    keys_to_check.add(new_key)
 
     return len(opened) == n
