@@ -155,6 +155,7 @@ heap_t *heap_insert(heap_t **root, int value)
 	{
 		/* The value was swapped, find where it ended up */
 		heap_t *current = new_node;
+
 		while (current && current->n != original_value)
 			current = current->parent;
 		if (current)
