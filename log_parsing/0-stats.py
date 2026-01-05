@@ -21,7 +21,8 @@ def parse_line(line):
     Parse a log line and extract status code and file size.
     Returns (status_code, file_size) or (None, None) if invalid format.
     """
-    pattern = r'^[\d\.]+\s+-\s+\[.+\]\s+"GET /projects/260 HTTP/1\.1"\s+(\d+)\s+(\d+)$'
+    pattern = (r'^[\d\.]+\s+-\s+\[.+\]\s+"GET /projects/260 HTTP/1\.1"\s+'
+               r'(\d+)\s+(\d+)$')
     match = re.match(pattern, line.strip())
 
     if match:
@@ -48,9 +49,9 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
-        all_lines_count = 0
         for line in sys.stdin:
-            all_lines_count += 1
+            line_count += 1
+
             status_code, file_size = parse_line(line)
 
             if status_code is not None and file_size is not None:
@@ -61,14 +62,8 @@ if __name__ == "__main__":
                         status_counts[status_code] = 0
                     status_counts[status_code] += 1
 
-                line_count += 1
-
-                if line_count % 10 == 0:
-                    print_statistics(total_size, status_counts)
-
-        # Always print final statistics unless we just printed (line_count is multiple of 10 and > 0)
-        if line_count == 0 or line_count % 10 != 0:
-            print_statistics(total_size, status_counts)
+            if line_count % 10 == 0:
+                print_statistics(total_size, status_counts)
 
     except KeyboardInterrupt:
         print_statistics(total_size, status_counts)
