@@ -49,9 +49,9 @@ if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
+        all_lines_count = 0
         for line in sys.stdin:
-            line_count += 1
-
+            all_lines_count += 1
             status_code, file_size = parse_line(line)
 
             if status_code is not None and file_size is not None:
@@ -62,8 +62,13 @@ if __name__ == "__main__":
                         status_counts[status_code] = 0
                     status_counts[status_code] += 1
 
-            if line_count % 10 == 0:
-                print_statistics(total_size, status_counts)
+                line_count += 1
+
+                if line_count % 10 == 0:
+                    print_statistics(total_size, status_counts)
+
+        if line_count == 0 or line_count % 10 != 0:
+            print_statistics(total_size, status_counts)
 
     except KeyboardInterrupt:
         print_statistics(total_size, status_counts)
