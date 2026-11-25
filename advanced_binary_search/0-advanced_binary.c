@@ -41,7 +41,9 @@ int search_rec(int *array, size_t size, int value, size_t offset)
 			return ((int)(offset + mid));
 		return (search_rec(array, mid + 1, value, offset));
 	}
-	return (search_rec(array, mid, value, offset));
+	if (mid == 0)
+		return (-1);
+	return (search_rec(array, mid + 1, value, offset));
 }
 
 /**
